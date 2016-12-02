@@ -15,10 +15,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Database {
-    public final ArrayList<Personagem> listaPersonagem;
-    public final ArrayList<Magia> listaMagia;
-    public final ArrayList<Arma> listaArma;
-
+    public static ArrayList<Personagem> listaPersonagem;
+    public static ArrayList<Magia> listaMagia;
+    public static ArrayList<Arma> listaArma;
+    
     private final Conexao con;
     
     public Database() throws Exception{
@@ -26,6 +26,7 @@ public class Database {
         listaMagia = new ArrayList<>();
         listaArma = new ArrayList<>();
         con = new Conexao();
+        load();
     }
     
     private void load() throws Exception{

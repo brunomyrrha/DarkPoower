@@ -20,13 +20,13 @@ public final class Conexao {
     private final String senha;  
 
     public Conexao() throws Exception{
-        this.url = "jdbc:mysql://localhost:3308/darkpoower";
+        this.url = "jdbc:mysql://localhost/darkpoower";
         this.login = "root";
         this.senha = "";
         //Azure
-        /*this.url = "jdbc:mysql://us-cdbr-azure-central-a.cloudapp.net/darkpoower";
-        this.login = "b8fcf6e4caee60";
-        this.senha = "6768892b";*/
+        //this.url = "jdbc:mysql://us-cdbr-azure-central-a.cloudapp.net/darkpoower";
+        //this.login = "b8fcf6e4caee60";
+        //this.senha = "6768892b";
         try{
             Class.forName("com.mysql.jdbc.Driver");
             conexao = DriverManager.getConnection(url,login,senha);
