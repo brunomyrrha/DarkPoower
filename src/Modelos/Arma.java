@@ -1,15 +1,14 @@
-package Model;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package Modelos;
 
 /**
  *
  * @author brunomyrrha
- */
+ */     
 public class Arma {
     private final int cod, dano;
     private final String nome;
