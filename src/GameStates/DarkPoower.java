@@ -15,7 +15,7 @@ import org.newdawn.slick.state.StateBasedGame;
  * @author brunomyrrha
  */
 public class DarkPoower extends StateBasedGame{
-    public static final int INICIO = 0;
+    public static final int MENU = 0;
     public static final int JOGO = 1;
     public static final int CREDITOS = 2;
     
@@ -26,14 +26,14 @@ public class DarkPoower extends StateBasedGame{
     
     public DarkPoower() throws Exception {
         super("Dark POOwer");
-        addState(new Menu(INICIO));
+        addState(new Menu(MENU));
         addState(new Creditos(CREDITOS));
-        this.enterState(INICIO);
+        this.enterState(MENU);
     }
 
     @Override
     public void initStatesList(GameContainer gc) throws SlickException {
-        getState(INICIO).init(gc, this);
+        getState(MENU).init(gc, this);
         getState(CREDITOS).init(gc, this);
       //  getState(JOGO).init(gc, this);
     }

@@ -50,7 +50,7 @@ public class Creditos extends BasicGameState{
     public void update (GameContainer gc, StateBasedGame sbg, int buffer){
         Input entrada = gc.getInput();
         if ((entrada.isKeyPressed(Input.KEY_ENTER)) || (entrada.isKeyPressed(Input.KEY_SPACE)) || (entrada.isKeyPressed(Input.KEY_ESCAPE))){
-            sbg.enterState(DarkPoower.INICIO);
+            sbg.enterState(DarkPoower.MENU);
         }
     }
     
