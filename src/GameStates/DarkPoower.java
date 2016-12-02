@@ -26,7 +26,8 @@ public class DarkPoower extends StateBasedGame{
     
     public DarkPoower() throws Exception {
         super("Dark POOwer");
-        addState(new View.Menu(INICIO));
+        addState(new Menu(INICIO));
+        addState(new Creditos(CREDITOS));
         this.enterState(INICIO);
     }
 
@@ -34,7 +35,7 @@ public class DarkPoower extends StateBasedGame{
     public void initStatesList(GameContainer gc) throws SlickException {
         getState(INICIO).init(gc, this);
         getState(CREDITOS).init(gc, this);
-        getState(JOGO).init(gc, this);
+      //  getState(JOGO).init(gc, this);
     }
     
     public static void main (String[] args) throws Exception{
