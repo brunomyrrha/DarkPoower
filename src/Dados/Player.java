@@ -36,11 +36,7 @@ public class Player {
         setArma();
         setMagia();
     }
-    
-    public int getJogador(){
-        return numero;
-    }
-    
+       
     private void setPersonagem(){
         for (Personagem p: Database.listaPersonagem){
             if (p.getCod() == cod){
@@ -179,6 +175,10 @@ public class Player {
         }
     }
     
+    public int getJogador(){
+        return numero;
+    }
+    
     public int getVida(){
         return vida;
     }
@@ -257,6 +257,10 @@ public class Player {
     
     public void trocarArma(Arma a){
         this.a = a;
+    }
+    
+    public Personagem getPersonagem(){
+        return p;
     }
     
     public void DEBUG(){
