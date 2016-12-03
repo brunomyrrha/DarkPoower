@@ -3,8 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/brunomyrrha/GitHub/DarkPoower/src/GameStates/DarkPoower.java</file>
-            <file>file:/Users/brunomyrrha/GitHub/DarkPoower/src/GameStates/Menu.java</file>
+            <file>file:/Users/brunomyrrha/GitHub/DarkPoower/src/Controles/Combate.java</file>
+            <file>file:/Users/brunomyrrha/GitHub/DarkPoower/src/Controles/Main_Teste.java</file>
+            <file>file:/Users/brunomyrrha/GitHub/DarkPoower/src/Dados/Log.java</file>
+            <file>file:/Users/brunomyrrha/GitHub/DarkPoower/src/Dados/Player.java</file>
         </group>
     </open-files>
 </project-private>
