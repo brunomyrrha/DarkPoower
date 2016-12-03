@@ -16,6 +16,7 @@ public class Player {
     private final int cod;
     private final int numero;
     private Personagem p;
+    private boolean especial;
     
     private Arma a;
     private int vida;
@@ -27,8 +28,10 @@ public class Player {
     public Player (int cod, int numero){
         this.cod = cod;
         this.numero = numero;
+        this.especial = false;
         listaA = new ArrayList<>();
         listaM = new ArrayList<>();
+        
         
         setPersonagem();
         setArma();
@@ -176,12 +179,8 @@ public class Player {
         }
     }
     
-    public int Vida(){
+    public int getVida(){
         return vida;
-    }
-    
-    public int Mana(){
-        return mana;
     }
     
     public void tirarVida(int dano){
@@ -189,6 +188,10 @@ public class Player {
         if (vida > p.getPontosVida()){
             vida = p.getPontosVida();
         }
+    }
+    
+    public int getMana(){
+        return mana;
     }
     
     public void gastarMana(int custo){
@@ -203,6 +206,45 @@ public class Player {
         if (mana > p.getPontosMana()){
             mana = p.getPontosMana();
         }
+    }
+
+    public void defender (int ataque){
+        ataque -= (p.getResistenciaFisica()+p.getAgilidade());
+        tirarVida(ataque);
+    }
+    
+    public void defenderMagia (int ataque){
+        ataque-=(p.getResistenciaMagica()+p.getAgilidade());
+        tirarVida(ataque);
+    }
+    
+    public void atacar(Player p){
+        int ataque = this.p.getForcaFisica()+this.a.getDano();
+        if (this.especial){
+            if (this.p.getTipo() == "h"){
+                ataque+=(ataque*10)/100;
+                especial = false;
+            }
+        }
+        p.defender(ataque);
+    }
+    
+    public void usarMagia(Player p, Magia m){
+        if (m.getCusto() <= mana){
+            int ataque = m.getDano()+this.p.getForcaMagica();
+            if (this.especial){
+                if (this.p.getTipo() != "h"){
+                    ataque+=(ataque*10)/100;
+                    especial = false;
+                }
+            }
+            gastarMana(m.getCusto());
+            p.defenderMagia(ataque);
+        }
+    }
+    
+    public void setEspecial(){
+        especial = true;
     }
     
     public void DEBUG(){

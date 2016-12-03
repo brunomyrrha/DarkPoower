@@ -16,8 +16,6 @@ public class Main_Teste {
     public static void main (String args[]) throws Exception{
         Database db = new Database();
         Player p = new Player (3,1);
-        Player b = new Player (5,1);
         p.DEBUG();
-        b.DEBUG();
     }    
 }
