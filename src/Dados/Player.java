@@ -249,7 +249,7 @@ public class Player {
     
     public void DEBUG(){
         System.out.println(p.getNome()+"\n"+a.getNome());
-        System.out.println("Vida: "+Vida()+" Mana: "+Mana());
+        System.out.println("Vida: "+getVida()+" Mana: "+getMana());
         for (Magia m : listaM){
             System.out.println(" -"+m.getNome()+" "+m.getDano());
         }
