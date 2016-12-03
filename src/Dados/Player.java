@@ -31,12 +31,12 @@ public class Player {
         this.especial = false;
         listaA = new ArrayList<>();
         listaM = new ArrayList<>();
-        
-        
+           
         setPersonagem();
         setArma();
         setMagia();
     }
+    
     public int getJogador(){
         return numero;
     }
@@ -245,6 +245,18 @@ public class Player {
     
     public void setEspecial(){
         especial = true;
+    }
+    
+    public ArrayList<Magia> getMagia(){
+        return listaM;
+    }
+    
+    public ArrayList<Arma> getArma(){
+        return listaA;
+    }
+    
+    public void trocarArma(Arma a){
+        this.a = a;
     }
     
     public void DEBUG(){
