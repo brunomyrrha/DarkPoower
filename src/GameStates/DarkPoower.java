@@ -20,6 +20,7 @@ public class DarkPoower extends StateBasedGame {
     public static final int MENU = 0;
     public static final int CREDITOS = 1;
     public static final int SELECAO = 2;
+    public static final int COMBATE = 3;
     
     public static final int ESCALA = 2;
     public static final int ALTURA = 320*ESCALA;
@@ -31,13 +32,15 @@ public class DarkPoower extends StateBasedGame {
         addState(new Menu(MENU));
         addState(new Creditos (CREDITOS));
         addState(new Selecao(SELECAO));
-        this.enterState(MENU);
+        addState(new Combate (COMBATE));
+        this.enterState(COMBATE);
     }
     
     @Override
     public void initStatesList (GameContainer gc) throws SlickException{
         getState(MENU).init(gc, this);
         getState(CREDITOS).init(gc, this);
+        getState(COMBATE).init(gc, this);
     }
     
     public static void main (String args[]) throws Exception{

@@ -128,7 +128,8 @@ public class Selecao extends BasicGameState{
                     break;
                 case 8:
                     if (Acao.lista.size() == 8){
-                        
+                        sbg.getState(DarkPoower.COMBATE).init(gc, sbg);
+                        sbg.enterState(DarkPoower.COMBATE);
                     }else{
                        sbg.enterState(DarkPoower.MENU);
                     }
@@ -162,7 +163,11 @@ public class Selecao extends BasicGameState{
     }
     
     private void renderJogador(){
-        fonteTituloTTF.drawString(60, 110, "Jogador #"+this.jogador);
+        if (Acao.lista.size() == 8){
+            fonteTituloTTF.drawString(60,110, "Iniciar combate!");
+        }else{
+            fonteTituloTTF.drawString(60, 110, "Jogador #"+this.jogador);
+        }
     }
     
     private void renderPlayers(){
@@ -189,13 +194,13 @@ public class Selecao extends BasicGameState{
             if (Acao.lista.size() == 8){
                 fonteTituloTTF.drawString(280,420,"OK",comSelecao);
             }else{
-                fonteTituloTTF.drawString(280, 420, "VOLTAR",comSelecao);
+                fonteTituloTTF.drawString(260, 420, "VOLTAR",comSelecao);
             }           
         }else{
             if (Acao.lista.size() == 8){
                 fonteTituloTTF.drawString(280,420,"OK",semSelecao);
             }else{
-                fonteTituloTTF.drawString(280, 420, "VOLTAR",semSelecao);
+                fonteTituloTTF.drawString(260, 420, "VOLTAR",semSelecao);
             }
         }
     }
