@@ -9,6 +9,7 @@ import Controles.Acao;
 import Dados.Player;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.ListIterator;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -39,16 +40,19 @@ public class Combate extends BasicGameState{
     private final Color inimigoSelecionado = new Color (236,53,67);
   
     private Player player;
-    private int alvo;    
+    private Player alvo;    
     private int jogador;    
     private int inimigo;
     private int avatar;
+    private ArrayList <Player> j1;
+    private ArrayList <Player> j2;
 
     //Controles de menus
     private int escolha;
     private int escolhaInimigo;
     private int escolhaArma;
     private int escolhaMagia;
+    private boolean gameOver;
     //Menus
     private boolean MENU_SIMPLES = true;
     private boolean MENU_MAGIA = false;
@@ -71,23 +75,20 @@ public class Combate extends BasicGameState{
         fonteTextoTTF = new TrueTypeFont (fonteTexto, true);
         fonteNome = new Font ("Verdana", Font.BOLD, 22);
         fonteNomeTTF = new TrueTypeFont (fonteNome, true);
-
         inimigo = 2;
-        jogador = 1;
-        
+        jogador = 1;      
         avatar = 0;
-        alvo = 0;
-        
+        gameOver = false;
         escolha = 0;
         escolhaInimigo = 0;
         escolhaArma = 0;
-        escolhaMagia = 0;
+        escolhaMagia = 0;                 
     }
 
     @Override
     public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
         g.drawImage(background, 0, 0);
-        renderJogador(jogador);
+        renderJogador();
         renderMenuSimples();
         renderInimigos();
     }
@@ -123,6 +124,7 @@ public class Combate extends BasicGameState{
             MENU_INIMIGO = true;
         }                
     }
+    
     private void menuInimigos(GameContainer gc){
         Input entrada = gc.getInput();
         int min=0, max=0;
@@ -146,17 +148,20 @@ public class Combate extends BasicGameState{
             }
         }
         if ((entrada.isKeyPressed(Input.KEY_ENTER))||(entrada.isKeyPressed(Input.KEY_SPACE))){
-            alvo = escolhaInimigo;
+            player.atacar(alvo);
+            if (alvo.getVida() < 0){
+                Acao.lista.remove(alvo);
+            }
             mudarJogador();
+            avatar();
             MENU_SIMPLES = true;
             MENU_INIMIGO = false;
         }        
     }
     
-    private void renderJogador(int i){
-        
+    private void renderJogador(){
+        player = Acao.lista.get(avatar);
         String textoEspecial="Não";
-        player = Acao.lista.get(i);
         if (player.getEspecial() == true){
             textoEspecial = "Carregado";
         }
@@ -190,30 +195,29 @@ public class Combate extends BasicGameState{
                     fonteNomeTTF.drawString(40,140+i*40, p.getPersonagem().getNome(),inimigoNaoSelecionado);
                 }else{
                     fonteNomeTTF.drawString(40, 140+i*40, p.getPersonagem().getNome(),inimigoSelecionado);
+                    alvo = p;
                 }
                 i++;
             }
         }
     }
+    private void listas(){
+        for (Player p : Acao.lista){
+            if (p.getJogador() == inimigo){
+                avatar++;
+            }else{
+                break;
+            }
+        }
+    }
+    
     private void mudarJogador(){
-        
-        avatar++;
-        
-        if (player.getJogador() == 1){
+        if (jogador == 1){
             jogador = 2;
-            avatar++;
+            inimigo = 1;            
         }else{
             jogador = 1;
-        }
-        
-        if (avatar > Acao.lista.size()){
-            avatar = 0;
-        }
-        
-        if (inimigo == 1){
-            inimigo = 2;
-        }else{
-            inimigo = 1;
-        }
+            inimigo = 2;      
+        }        
     }
 }
