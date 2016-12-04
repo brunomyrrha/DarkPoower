@@ -8,20 +8,19 @@ package Controles;
 import Dados.Player;
 import Modelos.Personagem;
 import java.util.ArrayList;
-import Dados.Log;
 /**
  *
  * @author brunomyrrha
  */
-public class Combate {
+public class Acao {
     public static ArrayList<Player> lista;
     private ArrayList<Player> players;
     private Personagem p;
     private Log log;
     private int turno;
     
-    public Combate(){
-        Combate.lista = new ArrayList<>();
+    public Acao(){
+        Acao.lista = new ArrayList<>();
         log = new Log();
         turno = 1;
     }

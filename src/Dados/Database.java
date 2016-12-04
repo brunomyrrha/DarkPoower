@@ -9,6 +9,7 @@ package Dados;
  *
  * @author brunomyrrha
  */
+import Controles.Conexao;
 import Modelos.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;

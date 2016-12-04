@@ -5,7 +5,7 @@
  */
 package GameStates;
 
-import Controles.Combate;
+import Controles.Acao;
 import Dados.Database;
 import Dados.Player;
 import Modelos.Personagem;
@@ -47,7 +47,7 @@ public class Selecao extends BasicGameState{
     @Override
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
        this.jogador = 1;
-       Combate.lista.clear();
+       Acao.lista.clear();
        Arrays.fill(selecionado, Boolean.FALSE);
        background = new Image ("Imagem/bgSelecao.jpg");
        fonteTitulo = new Font ("Verdana", Font.BOLD, 30);
@@ -66,7 +66,7 @@ public class Selecao extends BasicGameState{
                 player = new Player(1,jogador);
                     if(!selecionado[0]){
                         selecionado[0] = true;
-                        Combate.lista.add(player);
+                        Acao.lista.add(player);
                         alternarJogador();
                     }
                     break;
@@ -74,7 +74,7 @@ public class Selecao extends BasicGameState{
                 player = new Player(2,jogador);
                     if(!selecionado[1]){
                         selecionado[1] = true;
-                        Combate.lista.add(player);
+                        Acao.lista.add(player);
                         alternarJogador();
                     }
                     break;
@@ -82,7 +82,7 @@ public class Selecao extends BasicGameState{
                 player = new Player(3,jogador);
                     if(!selecionado[2]){
                         selecionado[2] = true;
-                        Combate.lista.add(player);
+                        Acao.lista.add(player);
                         alternarJogador();
                     }
                     break;
@@ -90,7 +90,7 @@ public class Selecao extends BasicGameState{
                 player = new Player(4,jogador);
                     if(!selecionado[3]){
                         selecionado[3] = true;
-                        Combate.lista.add(player);
+                        Acao.lista.add(player);
                         alternarJogador();
                     }
                     break;
@@ -98,7 +98,7 @@ public class Selecao extends BasicGameState{
                 player = new Player(5,jogador);
                     if(!selecionado[4]){
                         selecionado[4] = true;
-                        Combate.lista.add(player);
+                        Acao.lista.add(player);
                         alternarJogador();
                     }
                     break;
@@ -106,7 +106,7 @@ public class Selecao extends BasicGameState{
                 player = new Player(6,jogador);
                     if(!selecionado[5]){
                         selecionado[5] = true;
-                        Combate.lista.add(player);
+                        Acao.lista.add(player);
                         alternarJogador();
                     }
                     break;
@@ -114,7 +114,7 @@ public class Selecao extends BasicGameState{
                 player = new Player(7,jogador);
                     if(!selecionado[6]){
                         selecionado[6] = true;
-                        Combate.lista.add(player);
+                        Acao.lista.add(player);
                         alternarJogador();
                     }
                     break;
@@ -122,12 +122,12 @@ public class Selecao extends BasicGameState{
                 player = new Player(8,jogador);
                     if(!selecionado[7]){
                         selecionado[7] = true;
-                        Combate.lista.add(player);
+                        Acao.lista.add(player);
                         alternarJogador();
                     }
                     break;
                 case 8:
-                    if (Combate.lista.size() == 8){
+                    if (Acao.lista.size() == 8){
                         
                     }else{
                        sbg.enterState(DarkPoower.MENU);
@@ -186,13 +186,13 @@ public class Selecao extends BasicGameState{
     
     private void renderOk(){
         if (escolha == 8 ){
-            if (Combate.lista.size() == 8){
+            if (Acao.lista.size() == 8){
                 fonteTituloTTF.drawString(280,420,"OK",comSelecao);
             }else{
                 fonteTituloTTF.drawString(280, 420, "VOLTAR",comSelecao);
             }           
         }else{
-            if (Combate.lista.size() == 8){
+            if (Acao.lista.size() == 8){
                 fonteTituloTTF.drawString(280,420,"OK",semSelecao);
             }else{
                 fonteTituloTTF.drawString(280, 420, "VOLTAR",semSelecao);

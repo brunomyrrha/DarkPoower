@@ -5,7 +5,7 @@
  */
 package GameStates;
 
-import Controles.Combate;
+import Controles.Acao;
 import Dados.Database;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
@@ -44,7 +44,7 @@ public class DarkPoower extends StateBasedGame {
         AppGameContainer app = new AppGameContainer (new DarkPoower());
         app.setDisplayMode(ALTURA, LARGURA, TELACHEIA);
         Database bd = new Database();
-        Combate cb = new Combate();
+        Acao cb = new Acao();
         app.start();
     }
     
