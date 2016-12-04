@@ -33,14 +33,13 @@ public class DarkPoower extends StateBasedGame {
         addState(new Creditos (CREDITOS));
         addState(new Selecao(SELECAO));
         addState(new Combate (COMBATE));
-        this.enterState(COMBATE);
+        this.enterState(MENU);
     }
     
     @Override
     public void initStatesList (GameContainer gc) throws SlickException{
         getState(MENU).init(gc, this);
         getState(CREDITOS).init(gc, this);
-        getState(COMBATE).init(gc, this);
     }
     
     public static void main (String args[]) throws Exception{

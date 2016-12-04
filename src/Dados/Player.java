@@ -242,7 +242,9 @@ public class Player {
             p.defenderMagia(ataque);
         }
     }
-    
+    public boolean getEspecial(){
+        return especial;
+    }
     public void setEspecial(){
         especial = true;
     }
