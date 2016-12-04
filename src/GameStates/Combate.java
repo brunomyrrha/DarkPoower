@@ -9,14 +9,7 @@ import Controles.Acao;
 import Dados.Player;
 import java.awt.Font;
 import java.util.ArrayList;
-import java.util.ListIterator;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -41,9 +34,6 @@ public class Combate extends BasicGameState{
   
     private Player player;
     private Player alvo;    
-    private int jogador;    
-    private int inimigo;
-    private int avatar;
     private ArrayList <Player> j1;
     private ArrayList <Player> j2;
 
@@ -75,19 +65,19 @@ public class Combate extends BasicGameState{
         fonteTextoTTF = new TrueTypeFont (fonteTexto, true);
         fonteNome = new Font ("Verdana", Font.BOLD, 22);
         fonteNomeTTF = new TrueTypeFont (fonteNome, true);
-        inimigo = 2;
-        jogador = 1;      
-        avatar = 0;
         gameOver = false;
         escolha = 0;
         escolhaInimigo = 0;
         escolhaArma = 0;
-        escolhaMagia = 0;                 
+        escolhaMagia = 0;       
+        j1 = new ArrayList<>();
+        j2 = new ArrayList<>();       
     }
 
     @Override
     public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
         g.drawImage(background, 0, 0);
+
         renderJogador();
         renderMenuSimples();
         renderInimigos();
@@ -128,10 +118,8 @@ public class Combate extends BasicGameState{
     private void menuInimigos(GameContainer gc){
         Input entrada = gc.getInput();
         int min=0, max=0;
-        for (Player p : Acao.lista){
-            if (p.getJogador() == inimigo){
-                max++;
-            }
+        for (Player p : j2){
+            max++;
         }
         if ((entrada.isKeyPressed(Input.KEY_DOWN))||(entrada.isKeyPressed(Input.KEY_RIGHT))){
             if (escolhaInimigo >= max-1){
@@ -150,17 +138,15 @@ public class Combate extends BasicGameState{
         if ((entrada.isKeyPressed(Input.KEY_ENTER))||(entrada.isKeyPressed(Input.KEY_SPACE))){
             player.atacar(alvo);
             if (alvo.getVida() < 0){
-                Acao.lista.remove(alvo);
+                j2.remove(alvo);
             }
-            mudarJogador();
-            avatar();
             MENU_SIMPLES = true;
             MENU_INIMIGO = false;
         }        
     }
     
     private void renderJogador(){
-        player = Acao.lista.get(avatar);
+        
         String textoEspecial="Não";
         if (player.getEspecial() == true){
             textoEspecial = "Carregado";
@@ -170,6 +156,7 @@ public class Combate extends BasicGameState{
         fonteTextoTTF.drawString (40, 415,"Mana: "+player.getMana(),personagem);
         fonteTextoTTF.drawString (40, 435,"Especial: "+textoEspecial,personagem);
     }
+    
     private void renderMenuSimples(){
         if(escolha == 0){
             fonteNomeTTF.drawString(235, 365, "ATACAR",selecionado);
@@ -187,37 +174,28 @@ public class Combate extends BasicGameState{
             fonteNomeTTF.drawString(235, 425, "ARMA",naoSelecionado);
         }
     }
+    
     private void renderInimigos(){
         int i = 0;
-        for (Player p : Acao.lista){
-            if (p.getJogador() == inimigo){
-                if (escolhaInimigo != i){
-                    fonteNomeTTF.drawString(40,140+i*40, p.getPersonagem().getNome(),inimigoNaoSelecionado);
-                }else{
-                    fonteNomeTTF.drawString(40, 140+i*40, p.getPersonagem().getNome(),inimigoSelecionado);
-                    alvo = p;
+        for (Player p : j2){
+            if (escolhaInimigo != i){
+                fonteNomeTTF.drawString(40,140+i*40, p.getPersonagem().getNome(),inimigoNaoSelecionado);
+            }else{
+                fonteNomeTTF.drawString(40, 140+i*40, p.getPersonagem().getNome(),inimigoSelecionado);
+                alvo = p;
                 }
                 i++;
             }
         }
     }
-    private void listas(){
+    
+    private void carregarListas(){
         for (Player p : Acao.lista){
             if (p.getJogador() == inimigo){
-                avatar++;
+                j1.add(p);
             }else{
-                break;
+                j2.add(p);
             }
         }
-    }
-    
-    private void mudarJogador(){
-        if (jogador == 1){
-            jogador = 2;
-            inimigo = 1;            
-        }else{
-            jogador = 1;
-            inimigo = 2;      
-        }        
     }
 }
