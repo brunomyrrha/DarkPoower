@@ -20,7 +20,8 @@ public class Menu extends BasicGameState{
     private static final int CREDITOS = 3;
     private static final int SAIR = 4;
     
-    private final String[] opcoesJogo = new String[OPCOES];
+    private final String[] opcoesJogo = {"NOVA PARTIDA","MULTIPLAYER","ESTATISTICAS","CREDITOS","SAIR"};
+
     private Font fonteMenu;
     private TrueTypeFont fonteMenuTTF;
     private int escolha;
@@ -28,7 +29,7 @@ public class Menu extends BasicGameState{
     private final Color semSelecao = new Color(134,130,12);
     private final Color comSelecao = new Color(247,244,150);
     
-    Image background = null;
+    private Image background = null;
     
     public Menu(int id){
         idEstado = id;
@@ -43,16 +44,11 @@ public class Menu extends BasicGameState{
     public void init (GameContainer gc, StateBasedGame sbg) throws SlickException{
         fonteMenu = new Font ("Verdana", Font.BOLD, 30);
         fonteMenuTTF = new TrueTypeFont(fonteMenu, true);
-        opcoesJogo[0] = "NOVA PARTIDA";
-        opcoesJogo[1] = "MULTIPLAYER";
-        opcoesJogo[2] = "ESTATISTICAS";
-        opcoesJogo[3] = "CREDITOS";
-        opcoesJogo[4] = "SAIR";
         background = new Image ("Imagem/bgMenu.jpg");
     }
     
     @Override
-    public void update(GameContainer gc, StateBasedGame sbg, int buffer){
+    public void update(GameContainer gc, StateBasedGame sbg, int buffer) throws SlickException{
         Input entrada = gc.getInput();
         if (entrada.isKeyPressed(Input.KEY_DOWN)){
             if (escolha == (OPCOES - 1)){
@@ -74,7 +70,8 @@ public class Menu extends BasicGameState{
         if (entrada.isKeyPressed(Input.KEY_ENTER) || entrada.isKeyPressed(Input.KEY_SPACE)){
             switch (escolha){
                 case NOVOJOGO:
-                    sbg.enterState(DarkPoower.MENU);
+                    sbg.getState(DarkPoower.SELECAO).init(gc, sbg);
+                    sbg.enterState(DarkPoower.SELECAO);
                     break;
                 case MULTIPLAYER:
                     sbg.enterState(DarkPoower.MENU);

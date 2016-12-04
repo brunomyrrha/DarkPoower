@@ -14,7 +14,7 @@ import Dados.Log;
  * @author brunomyrrha
  */
 public class Combate {
-    private static ArrayList<Player> lista;
+    public static ArrayList<Player> lista;
     private ArrayList<Player> players;
     private Personagem p;
     private Log log;

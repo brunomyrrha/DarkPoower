@@ -5,6 +5,7 @@
  */
 package GameStates;
 
+import Controles.Combate;
 import Dados.Database;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
@@ -18,6 +19,7 @@ public class DarkPoower extends StateBasedGame {
     //declaração das telas de estado
     public static final int MENU = 0;
     public static final int CREDITOS = 1;
+    public static final int SELECAO = 2;
     
     public static final int ESCALA = 2;
     public static final int ALTURA = 320*ESCALA;
@@ -28,6 +30,7 @@ public class DarkPoower extends StateBasedGame {
         super ("Dark POOwer");
         addState(new Menu(MENU));
         addState(new Creditos (CREDITOS));
+        addState(new Selecao(SELECAO));
         this.enterState(MENU);
     }
     
@@ -41,6 +44,7 @@ public class DarkPoower extends StateBasedGame {
         AppGameContainer app = new AppGameContainer (new DarkPoower());
         app.setDisplayMode(ALTURA, LARGURA, TELACHEIA);
         Database bd = new Database();
+        Combate cb = new Combate();
         app.start();
     }
     

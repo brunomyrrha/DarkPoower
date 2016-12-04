@@ -23,7 +23,7 @@ public class Creditos extends BasicGameState{
     private static final String[] TEXTOCREDITOS = {"Dark POOWER","Jogo projetado por Moises Ramos","Arte: Bruno Myrrha","Programacao: Bruno Myrrha, Rodrigo Assis, Mateus Costa, Heitor Mizhary"
                 ,"Engine: Java Slick 2D","Bibliotecas: LWJGL, SLICK e MYSQL CONNECTOR","Banco de Dados: Azure Mysql","Jogo desenvolvido para a matéria de POO do UNIBH"};
     
-    Image background = null;
+    private Image background = null;
     
     public Creditos(int id){
         idEstado = id;
