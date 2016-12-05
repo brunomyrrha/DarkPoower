@@ -6,7 +6,9 @@
 package GameStates;
 
 import Controles.Acao;
+import Controles.Log;
 import Dados.Player;
+import Modelos.Magia;
 import java.awt.Font;
 import java.util.ArrayList;
 import org.newdawn.slick.*;
@@ -33,21 +35,27 @@ public class Combate extends BasicGameState{
     private final Color inimigoSelecionado = new Color (236,53,67);
   
     private Player player;
-    private Player alvo;    
+    private Player alvo;
+    private Magia m;
+
+    private int escolhaAvatar;
+    private int inimigo;
     private ArrayList <Player> j1;
     private ArrayList <Player> j2;
 
     //Controles de menus
     private int escolha;
+    private int turno;
     private int escolhaInimigo;
     private int escolhaArma;
     private int escolhaMagia;
-    private boolean gameOver;
+    private boolean game;
     //Menus
-    private boolean MENU_SIMPLES = true;
+    private boolean MENU_SIMPLES = false;
     private boolean MENU_MAGIA = false;
     private boolean MENU_ARMA = false;
     private boolean MENU_INIMIGO = false;
+    private boolean MENU_AVATAR = true;
 
     public Combate(int id){
         idEstado = id;
@@ -65,31 +73,52 @@ public class Combate extends BasicGameState{
         fonteTextoTTF = new TrueTypeFont (fonteTexto, true);
         fonteNome = new Font ("Verdana", Font.BOLD, 22);
         fonteNomeTTF = new TrueTypeFont (fonteNome, true);
-        gameOver = false;
         escolha = 0;
+        inimigo = 2;
+        game = true;
+        escolhaAvatar = 0;
         escolhaInimigo = 0;
         escolhaArma = 0;
-        escolhaMagia = 0;       
+        escolhaMagia = 0;     
+        turno = 1;
         j1 = new ArrayList<>();
-        j2 = new ArrayList<>();       
+        j2 = new ArrayList<>();      
+        carregarListas();         
     }
 
     @Override
     public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
         g.drawImage(background, 0, 0);
-
-        renderJogador();
-        renderMenuSimples();
-        renderInimigos();
+        if (MENU_AVATAR){
+            renderEscolherPersonagem(g);
+        }
+        if (!MENU_AVATAR){
+            renderMenuSimples();
+        }
+        if (!MENU_AVATAR){
+            renderInimigos();
+        }
+        if (!MENU_AVATAR){
+            renderJogador(g);
+        }
+        if (MENU_MAGIA){
+            renderEscolherMagia(g);
+        }
     }
 
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int i) throws SlickException {
+        if (MENU_AVATAR){
+            escolherPersonagem(gc);            
+        }
         if (MENU_INIMIGO){
-            menuInimigos(gc);
+            menuInimigos(gc,sbg);
         }
         if (MENU_SIMPLES){
             menuSimples(gc);
+        }
+        if (MENU_MAGIA){
+            escolherMagia(gc,sbg);
         }
     }
     
@@ -110,12 +139,23 @@ public class Combate extends BasicGameState{
             }
         }
         if ((entrada.isKeyPressed(Input.KEY_ENTER))||(entrada.isKeyPressed(Input.KEY_SPACE))){
-            MENU_SIMPLES = false;
-            MENU_INIMIGO = true;
+            switch(escolha){
+                case 0:
+                    MENU_SIMPLES = false;
+                    MENU_INIMIGO = true;
+                    break;
+                case 1:
+                    MENU_SIMPLES = false;
+                    MENU_MAGIA = true;
+                    break;
+                case 2:
+                    break;
+            }
+
         }                
     }
     
-    private void menuInimigos(GameContainer gc){
+    private void menuInimigos(GameContainer gc, StateBasedGame sbg){
         Input entrada = gc.getInput();
         int min=0, max=0;
         for (Player p : j2){
@@ -136,25 +176,22 @@ public class Combate extends BasicGameState{
             }
         }
         if ((entrada.isKeyPressed(Input.KEY_ENTER))||(entrada.isKeyPressed(Input.KEY_SPACE))){
-            player.atacar(alvo);
-            if (alvo.getVida() < 0){
-                j2.remove(alvo);
+            if (m != null){
+                player.usarMagia(alvo, m);
+                m = null;
+            }else{
+                player.atacar(alvo);
             }
+            if (player.getEspecial()){
+                player.setEspecial(false);
+            }
+            if (alvo.getVida() < 0){
+                Acao.lista.remove(alvo);
+            }
+            trocarJogador(sbg);
             MENU_SIMPLES = true;
             MENU_INIMIGO = false;
         }        
-    }
-    
-    private void renderJogador(){
-        
-        String textoEspecial="Não";
-        if (player.getEspecial() == true){
-            textoEspecial = "Carregado";
-        }
-        fonteNomeTTF.drawString (40, 360, player.getPersonagem().getNome(), personagem);
-        fonteTextoTTF.drawString (40, 395,"Vida: "+player.getVida(), personagem);
-        fonteTextoTTF.drawString (40, 415,"Mana: "+player.getMana(),personagem);
-        fonteTextoTTF.drawString (40, 435,"Especial: "+textoEspecial,personagem);
     }
     
     private void renderMenuSimples(){
@@ -183,19 +220,156 @@ public class Combate extends BasicGameState{
             }else{
                 fonteNomeTTF.drawString(40, 140+i*40, p.getPersonagem().getNome(),inimigoSelecionado);
                 alvo = p;
-                }
-                i++;
             }
+            i++;
         }
     }
     
     private void carregarListas(){
         for (Player p : Acao.lista){
-            if (p.getJogador() == inimigo){
+            if (p.getJogador() != inimigo){
                 j1.add(p);
             }else{
                 j2.add(p);
             }
         }
     }
+    
+    private void renderEscolherArma (Graphics g){
+        
+    }
+    
+    private void escolherArma(GameContainer gc, StateBasedGame sbg){
+        
+    }
+    
+    private void renderEscolherMagia (Graphics g){
+        g.setColor(new Color(168,161,207));
+        g.fillRect(180,120,180,210);
+        for (int i = 0; i < player.getMagia().size(); i++){
+            if (i == escolhaMagia){
+                fonteTextoTTF.drawString(200, 150+i*20, player.getMagia().get(i).getNome(),selecionado);
+            }else{
+                fonteTextoTTF.drawString(200, 150+i*20, player.getMagia().get(i).getNome(),naoSelecionado);
+            }
+        }
+    }
+    
+    private void escolherMagia(GameContainer gc, StateBasedGame sbg){
+        Input entrada = gc.getInput();
+        if ((entrada.isKeyPressed(Input.KEY_DOWN))||(entrada.isKeyPressed(Input.KEY_RIGHT))){
+            if(escolhaMagia >= player.getMagia().size()-1){
+                escolhaMagia = 0;
+            }else{
+                escolhaMagia++;                
+            }
+        }
+        if ((entrada.isKeyPressed(Input.KEY_UP))||entrada.isKeyPressed(Input.KEY_LEFT)){          
+            if (escolhaMagia <= 0){
+                escolhaMagia = player.getMagia().size()-1;
+            }else{
+                escolhaMagia--;
+            }
+        }
+        if ((entrada.isKeyPressed(Input.KEY_ENTER))||(entrada.isKeyPressed(Input.KEY_SPACE))){
+            m = player.getMagia().get(escolhaMagia);
+            if (m.getDano() > 0){
+                MENU_MAGIA = false;
+                MENU_INIMIGO = true;
+            }else{
+                player.usarMagia(player, m);
+                MENU_MAGIA = false;
+                trocarJogador(sbg);
+                MENU_SIMPLES = true;                
+            }
+        }
+    }    
+    
+    private void renderEscolherPersonagem(Graphics g){
+        g.setColor(new Color(168,161,207));
+        g.fillRect(0,200,640,80);
+        for (int i = 0; i < j1.size(); i++){
+            if (i == escolhaAvatar){
+                fonteNomeTTF.drawString(40 + i*150, 202, j1.get(i).getPersonagem().getNome(),selecionado);
+                fonteTextoTTF.drawString(40+ i* 150, 235, "Vida: "+j1.get(i).getVida(),selecionado);
+                fonteTextoTTF.drawString(40+ i* 150, 250, "Mana: "+j1.get(i).getMana(),selecionado);                
+            }else{              
+                fonteNomeTTF.drawString(40 + i*150, 202, j1.get(i).getPersonagem().getNome(),naoSelecionado);
+                fonteTextoTTF.drawString(40+ i* 150, 235, "Vida: "+j1.get(i).getVida(),naoSelecionado);
+                fonteTextoTTF.drawString(40+ i* 150, 250, "Mana: "+j1.get(i).getMana(),naoSelecionado);
+            }
+        }
+    }
+   
+    private void escolherPersonagem(GameContainer gc){
+        Input entrada = gc.getInput();
+        if ((entrada.isKeyPressed(Input.KEY_DOWN))||(entrada.isKeyPressed(Input.KEY_RIGHT))){
+            if(escolhaAvatar >= j1.size()-1){
+                escolhaAvatar = 0;
+            }else{
+                escolhaAvatar++;                
+            }
+        }
+        if ((entrada.isKeyPressed(Input.KEY_UP))||entrada.isKeyPressed(Input.KEY_LEFT)){          
+            if (escolhaAvatar <= 0){
+                escolhaAvatar = j1.size()-1;
+            }else{
+                escolhaAvatar--;
+            }
+        }
+        if ((entrada.isKeyPressed(Input.KEY_ENTER))||(entrada.isKeyPressed(Input.KEY_SPACE))){
+            player = j1.get(escolhaAvatar);
+            renderMenuSimples();
+            renderInimigos();
+            MENU_SIMPLES = true;
+            MENU_AVATAR = false;
+            
+        }
+    }
+    
+    private void trocarJogador(StateBasedGame sbg){
+        if (inimigo == 2){
+            inimigo = 1;
+        }else{
+            inimigo = 2;
+        }
+        j1.clear();
+        j2.clear();
+        carregarListas();
+        MENU_AVATAR = true;
+        turno(sbg);
+    }
+    
+    private void turno(StateBasedGame sbg){
+        if ((!j1.isEmpty())||(!j2.isEmpty())){
+            turno++;
+            for (Player p : Acao.lista){
+                p.recuperarMana();
+                if (turno%10 == 0){
+                    p.setEspecial(true);
+                }                
+            }
+        }else{
+            game = false;
+            Log log = new Log();
+            log.addLog("Turnos: "+turno);
+            log.addLog("\n-------------------\nSobreviventes:");             
+            for (Player p : Acao.lista){
+                log.addLog("\nPersonagem: "+p.getPersonagem());
+            }
+            sbg.enterState(DarkPoower.MENU);
+        }
+    }
+    
+    private void renderJogador(Graphics g){
+        player = j1.get(escolhaAvatar);
+        String textoEspecial="Não";
+        if (player.getEspecial() == true){
+            textoEspecial = "Sim";
+        }
+        fonteNomeTTF.drawString (40, 360, player.getPersonagem().getNome(), personagem);
+        fonteTextoTTF.drawString (40, 395,"Vida: "+player.getVida(), personagem);
+        fonteTextoTTF.drawString (40, 415,"Mana: "+player.getMana(),personagem);
+        fonteTextoTTF.drawString (40, 435,"Especial: "+textoEspecial,personagem);        
+    }    
 }

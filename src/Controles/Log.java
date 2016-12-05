@@ -20,7 +20,7 @@ public class Log {
     
     public Log (){
         texto = "";
-        df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss\n\n");
         date = new Date();
         texto+=df.format(date);
     }
