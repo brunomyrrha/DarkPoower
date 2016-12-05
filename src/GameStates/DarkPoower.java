@@ -21,6 +21,7 @@ public class DarkPoower extends StateBasedGame {
     public static final int CREDITOS = 1;
     public static final int SELECAO = 2;
     public static final int COMBATE = 3;
+    public static final int GAMEOVER = 4;
     
     public static final int ESCALA = 2;
     public static final int ALTURA = 320*ESCALA;
@@ -33,6 +34,7 @@ public class DarkPoower extends StateBasedGame {
         addState(new Creditos (CREDITOS));
         addState(new Selecao(SELECAO));
         addState(new Combate (COMBATE));
+        addState(new GameOver (GAMEOVER));
         this.enterState(MENU);
     }
     

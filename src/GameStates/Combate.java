@@ -8,6 +8,7 @@ package GameStates;
 import Controles.Acao;
 import Controles.Log;
 import Dados.Player;
+import Modelos.Arma;
 import Modelos.Magia;
 import java.awt.Font;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import org.newdawn.slick.state.StateBasedGame;
 public class Combate extends BasicGameState{
     private int idEstado;
     private Image background = null;
+    private Image fimJogo = null;
     
     //Fontes e cores dos renders de texto
     private Font fonteTexto;
@@ -37,9 +39,11 @@ public class Combate extends BasicGameState{
     private Player player;
     private Player alvo;
     private Magia m;
+    private Arma a;
 
     private int escolhaAvatar;
     private int inimigo;
+    private int jogador;
     private ArrayList <Player> j1;
     private ArrayList <Player> j2;
 
@@ -49,13 +53,16 @@ public class Combate extends BasicGameState{
     private int escolhaInimigo;
     private int escolhaArma;
     private int escolhaMagia;
-    private boolean game;
+    private int escolhaCura;
+    
     //Menus
     private boolean MENU_SIMPLES = false;
     private boolean MENU_MAGIA = false;
     private boolean MENU_ARMA = false;
     private boolean MENU_INIMIGO = false;
     private boolean MENU_AVATAR = true;
+    private boolean FIM_JOGO = false;
+    private boolean MENU_CURA = false;
 
     public Combate(int id){
         idEstado = id;
@@ -69,17 +76,19 @@ public class Combate extends BasicGameState{
     @Override
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
         background = new Image ("Imagem/bgCombate.jpg");
+        fimJogo = new Image ("Imagem/bgCombate.jpg");
         fonteTexto = new Font ("Verdana", Font.BOLD, 16);
         fonteTextoTTF = new TrueTypeFont (fonteTexto, true);
         fonteNome = new Font ("Verdana", Font.BOLD, 22);
         fonteNomeTTF = new TrueTypeFont (fonteNome, true);
         escolha = 0;
         inimigo = 2;
-        game = true;
+        jogador = 1;
         escolhaAvatar = 0;
         escolhaInimigo = 0;
         escolhaArma = 0;
-        escolhaMagia = 0;     
+        escolhaMagia = 0;  
+        escolhaCura = 0;
         turno = 1;
         j1 = new ArrayList<>();
         j2 = new ArrayList<>();      
@@ -104,6 +113,12 @@ public class Combate extends BasicGameState{
         if (MENU_MAGIA){
             renderEscolherMagia(g);
         }
+        if(MENU_ARMA){
+            renderEscolherArma(g);
+        }
+        if (MENU_CURA){
+            renderCura(g);
+        }
     }
 
     @Override
@@ -120,8 +135,13 @@ public class Combate extends BasicGameState{
         if (MENU_MAGIA){
             escolherMagia(gc,sbg);
         }
+        if(MENU_ARMA){
+            escolherArma(gc,sbg);
+        }
+        if(MENU_CURA){
+            cura(gc,sbg);
+        }
     }
-    
     private void menuSimples(GameContainer gc){
         Input entrada = gc.getInput();
        if ((entrada.isKeyPressed(Input.KEY_DOWN))||(entrada.isKeyPressed(Input.KEY_RIGHT))){
@@ -149,6 +169,8 @@ public class Combate extends BasicGameState{
                     MENU_MAGIA = true;
                     break;
                 case 2:
+                    MENU_SIMPLES = false;
+                    MENU_ARMA = true;
                     break;
             }
 
@@ -178,6 +200,7 @@ public class Combate extends BasicGameState{
         if ((entrada.isKeyPressed(Input.KEY_ENTER))||(entrada.isKeyPressed(Input.KEY_SPACE))){
             if (m != null){
                 player.usarMagia(alvo, m);
+                player.gastarMana(m.getCusto());
                 m = null;
             }else{
                 player.atacar(alvo);
@@ -189,6 +212,9 @@ public class Combate extends BasicGameState{
                 Acao.lista.remove(alvo);
             }
             trocarJogador(sbg);
+            escolhaInimigo = 0;
+            escolhaArma = 0;
+            escolhaMagia = 0;  
             MENU_SIMPLES = true;
             MENU_INIMIGO = false;
         }        
@@ -210,6 +236,49 @@ public class Combate extends BasicGameState{
         }else{
             fonteNomeTTF.drawString(235, 425, "ARMA",naoSelecionado);
         }
+    }
+    
+    private void renderCura(Graphics g){
+        g.setColor(new Color(168,161,207));
+        g.fillRect(0,200,640,80);
+        for (int i = 0; i < j1.size(); i++){
+            if (i == escolhaCura){
+                fonteNomeTTF.drawString(40 + i*150, 202, j1.get(i).getPersonagem().getNome(),selecionado);
+                fonteTextoTTF.drawString(40+ i* 150, 235, "Vida: "+j1.get(i).getVida(),selecionado);
+                fonteTextoTTF.drawString(40+ i* 150, 250, "Mana: "+j1.get(i).getMana(),selecionado);                
+            }else{              
+                fonteNomeTTF.drawString(40 + i*150, 202, j1.get(i).getPersonagem().getNome(),naoSelecionado);
+                fonteTextoTTF.drawString(40+ i* 150, 235, "Vida: "+j1.get(i).getVida(),naoSelecionado);
+                fonteTextoTTF.drawString(40+ i* 150, 250, "Mana: "+j1.get(i).getMana(),naoSelecionado);
+            }
+        }
+    }
+    
+    private void cura(GameContainer gc, StateBasedGame sbg){
+    Input entrada = gc.getInput();
+        if ((entrada.isKeyPressed(Input.KEY_DOWN))||(entrada.isKeyPressed(Input.KEY_RIGHT))){
+            if(escolhaCura >= j1.size()-1){
+                escolhaCura = 0;
+            }else{
+                escolhaCura++;                
+            }
+        }
+        if ((entrada.isKeyPressed(Input.KEY_UP))||entrada.isKeyPressed(Input.KEY_LEFT)){          
+            if (escolhaCura <= 0){
+                escolhaCura = j1.size()-1;
+            }else{
+                escolhaCura--;
+            }
+        }
+        if ((entrada.isKeyPressed(Input.KEY_ENTER))||(entrada.isKeyPressed(Input.KEY_SPACE))){
+            player.usarMagia(j1.get(escolhaCura), m);
+            player.gastarMana(m.getCusto());
+            m = null;
+            escolhaCura = 0;
+            MENU_CURA = false;
+            trocarJogador(sbg);
+            MENU_AVATAR = true;
+        }        
     }
     
     private void renderInimigos(){
@@ -236,12 +305,51 @@ public class Combate extends BasicGameState{
     }
     
     private void renderEscolherArma (Graphics g){
-        
+        g.setColor(new Color(168,161,207));
+        g.fillRect(180,120,200,160);
+
+        for (int i = 0; i < player.getArma().size(); i++){
+            if (i == escolhaArma){
+                fonteTextoTTF.drawString(200, 150+i*20, player.getArma().get(i).getNome(),selecionado);
+            }else{
+                fonteTextoTTF.drawString(200, 150+i*20, player.getArma().get(i).getNome(),naoSelecionado);
+            }
+        }           
     }
     
     private void escolherArma(GameContainer gc, StateBasedGame sbg){
-        
-    }
+        Input entrada = gc.getInput();
+        if (entrada.isKeyPressed(Input.KEY_ESCAPE)){
+            MENU_ARMA = false;
+            MENU_SIMPLES = true;
+        }
+        if ((entrada.isKeyPressed(Input.KEY_DOWN))||(entrada.isKeyPressed(Input.KEY_RIGHT))){
+            if(escolhaArma >= player.getArma().size()-1){
+                escolhaArma = 0;
+            }else{
+                escolhaArma++;                
+            }
+        }
+        if ((entrada.isKeyPressed(Input.KEY_UP))||entrada.isKeyPressed(Input.KEY_LEFT)){          
+            if (escolhaArma <= 0){
+                escolhaArma = player.getArma().size()-1;
+            }else{
+                escolhaArma--;
+            }
+        }
+        if ((entrada.isKeyPressed(Input.KEY_ENTER))||(entrada.isKeyPressed(Input.KEY_SPACE))){
+            a = player.getArma().get(escolhaArma);
+            player.escolhaArma(a);
+            a = null;
+            MENU_ARMA = false;
+            trocarJogador(sbg);
+            escolhaInimigo = 0;
+            escolhaArma = 0;
+            escolhaMagia = 0;             
+            MENU_SIMPLES = true;
+            
+        }
+    }   
     
     private void renderEscolherMagia (Graphics g){
         g.setColor(new Color(168,161,207));
@@ -257,6 +365,10 @@ public class Combate extends BasicGameState{
     
     private void escolherMagia(GameContainer gc, StateBasedGame sbg){
         Input entrada = gc.getInput();
+        if (entrada.isKeyPressed(Input.KEY_ESCAPE)){
+            MENU_MAGIA = false;
+            MENU_SIMPLES = true;
+        }        
         if ((entrada.isKeyPressed(Input.KEY_DOWN))||(entrada.isKeyPressed(Input.KEY_RIGHT))){
             if(escolhaMagia >= player.getMagia().size()-1){
                 escolhaMagia = 0;
@@ -271,6 +383,7 @@ public class Combate extends BasicGameState{
                 escolhaMagia--;
             }
         }
+        
         if ((entrada.isKeyPressed(Input.KEY_ENTER))||(entrada.isKeyPressed(Input.KEY_SPACE))){
             m = player.getMagia().get(escolhaMagia);
             if (m.getDano() > 0){
@@ -278,10 +391,18 @@ public class Combate extends BasicGameState{
                 MENU_INIMIGO = true;
             }else{
                 player.usarMagia(player, m);
+                if (m.getCod() == 4){
+                    MENU_MAGIA = false;
+                    MENU_CURA = true;
+                }else{
                 MENU_MAGIA = false;
                 trocarJogador(sbg);
                 MENU_SIMPLES = true;                
+                }
             }
+            escolhaInimigo = 0;
+            escolhaArma = 0;
+            escolhaMagia = 0;             
         }
     }    
     
@@ -330,18 +451,23 @@ public class Combate extends BasicGameState{
     private void trocarJogador(StateBasedGame sbg){
         if (inimigo == 2){
             inimigo = 1;
+            jogador = 2;
         }else{
             inimigo = 2;
+            jogador = 1;
         }
         j1.clear();
         j2.clear();
         carregarListas();
+        if ((j1.size()<1)||(j2.size()<1)){
+            sbg.enterState(DarkPoower.GAMEOVER);
+        }
         MENU_AVATAR = true;
         turno(sbg);
     }
     
     private void turno(StateBasedGame sbg){
-        if ((!j1.isEmpty())||(!j2.isEmpty())){
+        if (!j1.isEmpty()||(!j2.isEmpty())){
             turno++;
             for (Player p : Acao.lista){
                 p.recuperarMana();
@@ -349,14 +475,16 @@ public class Combate extends BasicGameState{
                     p.setEspecial(true);
                 }                
             }
+            Log.turnos = turno+"";
         }else{
-            game = false;
             Log log = new Log();
             log.addLog("Turnos: "+turno);
             log.addLog("\n-------------------\nSobreviventes:");             
             for (Player p : Acao.lista){
                 log.addLog("\nPersonagem: "+p.getPersonagem());
+                log.addLog("\nVitoria: Jogador #"+jogador);
             }
+            Log.jogador = jogador+"";
             sbg.enterState(DarkPoower.MENU);
         }
     }

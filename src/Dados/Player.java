@@ -113,7 +113,9 @@ public class Player {
             }
         }
     }
-    
+    public void escolhaArma(Arma a){
+        this.a = a;
+    }
     private void setMagia(){
         switch(cod){
             case 1:
