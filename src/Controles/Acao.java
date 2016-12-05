@@ -36,27 +36,6 @@ public class Acao {
 
     }
     
-    public boolean update(){
-        turno ++;        
-        if (!lista.isEmpty()){
-            for  (Player p : lista){
-                if (!lista.isEmpty()){
-                    p.recuperarMana();
-                    if (p.getVida() <= 0 ){
-                        remover(p);
-                    }
-                    if (turno%10 == 0){
-                        p.setEspecial();
-                    }
-                }
-            }
-            return true;
-        }else{
-            log.addLog("\nPartida finalizada em "+turno+"turnos.");
-            return false;
-        }
-    }
-    
     public ArrayList<Player> playersJogador(int jogador){
         this.players = new ArrayList<>();        
         for (Player p : lista){

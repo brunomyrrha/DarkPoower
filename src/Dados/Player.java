@@ -113,7 +113,9 @@ public class Player {
             }
         }
     }
-    
+    public void escolhaArma(Arma a){
+        this.a = a;
+    }
     private void setMagia(){
         switch(cod){
             case 1:
@@ -222,8 +224,8 @@ public class Player {
         int ataque = this.p.getForcaFisica()+this.a.getDano();
         if (this.especial){
             if (this.p.getTipo() == "h"){
-                ataque+=(ataque*10)/100;
                 especial = false;
+                ataque+=(ataque*10)/100;
             }
         }
         p.defender(ataque);
@@ -245,8 +247,8 @@ public class Player {
     public boolean getEspecial(){
         return especial;
     }
-    public void setEspecial(){
-        especial = true;
+    public void setEspecial(boolean especial){
+        this.especial = especial;
     }
     
     public ArrayList<Magia> getMagia(){
